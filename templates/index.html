@@ -3,10 +3,24 @@
 {% block title %}Dashboard - Student Management System{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col">
-        <h1 class="display-4 mb-0">Dashboard</h1>
-        <p class="lead">Welcome to the Student Management System</p>
+<div class="page-header">
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="d-flex align-items-center">
+                <div class="dashboard-icon me-3">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div>
+                    <h1 class="display-5 mb-0 fw-bold">Dashboard</h1>
+                    <p class="lead mb-0 text-muted">Welcome to your Student Management System</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="dashboard-stats">
+                <span class="badge bg-success fs-6 px-3 py-2">System Online</span>
+            </div>
+        </div>
     </div>
 </div>
 

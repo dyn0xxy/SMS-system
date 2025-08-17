@@ -14,49 +14,49 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
 </head>
-<body class="d-flex flex-column h-100">
-    <!-- Modern Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold fs-4" href="{{ url_for('index') }}">
-                <i class="fas fa-graduation-cap me-2 text-warning"></i>
-                <span class="text-white">EduManage</span>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Student Management System
             </a>
             
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item mx-2">
-                        <a class="nav-link px-3 py-2 rounded-pill nav-link-modern" href="{{ url_for('index') }}">
-                            <i class="fas fa-home me-2"></i>Dashboard
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>Dashboard
                         </a>
                     </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link px-3 py-2 rounded-pill nav-link-modern" href="{{ url_for('students') }}">
-                            <i class="fas fa-user-graduate me-2"></i>Students
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('students') }}">
+                            <i class="fas fa-users me-1"></i>Students
                         </a>
                     </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link px-3 py-2 rounded-pill nav-link-modern" href="{{ url_for('courses') }}">
-                            <i class="fas fa-book-open me-2"></i>Courses
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('courses') }}">
+                            <i class="fas fa-book me-1"></i>Courses
                         </a>
                     </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link px-3 py-2 rounded-pill nav-link-modern" href="{{ url_for('enrollments') }}">
-                            <i class="fas fa-user-plus me-2"></i>Enrollments
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('enrollments') }}">
+                            <i class="fas fa-user-plus me-1"></i>Enrollments
                         </a>
                     </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link px-3 py-2 rounded-pill nav-link-modern" href="{{ url_for('grades') }}">
-                            <i class="fas fa-award me-2"></i>Grades
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('grades') }}">
+                            <i class="fas fa-chart-line me-1"></i>Grades
                         </a>
                     </li>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link px-3 py-2 rounded-pill nav-link-modern" href="{{ url_for('reports') }}">
-                            <i class="fas fa-chart-line me-2"></i>Reports
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('reports') }}">
+                            <i class="fas fa-chart-bar me-1"></i>Reports
                         </a>
                     </li>
                 </ul>
@@ -65,7 +65,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container-fluid px-4 py-4 flex-grow-1">
+    <main class="container my-4">
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -82,23 +82,10 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer - Always at bottom -->
-    <footer class="text-light py-3 mt-auto" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
         <div class="container text-center">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0 text-muted">
-                        <i class="fas fa-code me-1"></i>
-                        Built with Flask & Bootstrap
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <p class="mb-0">
-                        <i class="fas fa-copyright me-1"></i>
-                        2025 EduManage System
-                    </p>
-                </div>
-            </div>
+            <p class="mb-0">&copy; 2025 Student Management System. Built with Flask and Bootstrap.</p>
         </div>
     </footer>
 

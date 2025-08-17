@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Student Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1 class="display-4 mb-0">Dashboard</h1>
+        <p class="lead">Welcome to the Student Management System</p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Students</h5>
+                        <h2 class="card-text">{{ stats.total_students }}</h2>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Courses</h5>
+                        <h2 class="card-text">{{ stats.total_courses }}</h2>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Enrollments</h5>
+                        <h2 class="card-text">{{ stats.total_enrollments }}</h2>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Grades</h5>
+                        <h2 class="card-text">{{ stats.total_grades }}</h2>
+                    </div>
+                    <div class="fs-1">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-plus me-2"></i>Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('new_student') }}" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-2"></i>Add New Student
+                    </a>
+                    <a href="{{ url_for('new_course') }}" class="btn btn-success">
+                        <i class="fas fa-book me-2"></i>Add New Course
+                    </a>
+                    <a href="{{ url_for('new_enrollment') }}" class="btn btn-warning">
+                        <i class="fas fa-user-graduate me-2"></i>Enroll Student
+                    </a>
+                    <a href="{{ url_for('new_grade') }}" class="btn btn-info">
+                        <i class="fas fa-star me-2"></i>Assign Grade
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>System Overview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="border-end">
+                            <h3 class="text-primary">{{ "%.1f"|format(stats.total_students / stats.total_courses if stats.total_courses > 0 else 0) }}</h3>
+                            <small class="text-muted">Students per Course</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-success">{{ "%.1f"|format((stats.total_grades / stats.total_enrollments * 100) if stats.total_enrollments > 0 else 0) }}%</h3>
+                        <small class="text-muted">Graded Enrollments</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <a href="{{ url_for('reports') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-bar me-2"></i>View Detailed Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if stats.total_students == 0 and stats.total_courses == 0 %}
+<div class="row mt-5">
+    <div class="col-md-8 mx-auto">
+        <div class="card border-info">
+            <div class="card-body text-center">
+                <i class="fas fa-info-circle text-info fs-1 mb-3"></i>
+                <h4>Getting Started</h4>
+                <p class="text-muted">
+                    Welcome to your Student Management System! To begin:
+                </p>
+                <ol class="list-unstyled text-start">
+                    <li class="mb-2">1. Add some <a href="{{ url_for('new_course') }}">courses</a> to your system</li>
+                    <li class="mb-2">2. Register <a href="{{ url_for('new_student') }}">students</a></li>
+                    <li class="mb-2">3. <a href="{{ url_for('new_enrollment') }}">Enroll students</a> in courses</li>
+                    <li class="mb-2">4. <a href="{{ url_for('new_grade') }}">Assign grades</a> to track progress</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

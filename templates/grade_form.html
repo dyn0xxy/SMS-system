@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if grade %}Edit Grade{% else %}Assign Grade{% endif %} - Student Management System
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-{% if grade %}edit{% else %}star{% endif %} me-2"></i>
+                    {% if grade %}Edit Grade{% else %}Assign Grade{% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if grade %}
+                    <!-- Edit existing grade -->
+                    <form method="POST" action="{{ url_for('update_grade', grade_id=grade.id) }}" novalidate>
+                        <!-- Student and Course Info (read-only) -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Student</label>
+                                <div class="form-control-plaintext">
+                                    <strong>{{ student.name }}</strong><br>
+                                    <small class="text-muted">{{ student.email }}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Course</label>
+                                <div class="form-control-plaintext">
+                                    <strong>{{ course.code }} - {{ course.name }}</strong><br>
+                                    <small class="text-muted">{{ course.credits }} credits</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Grade Selection -->
+                        <div class="mb-3">
+                            <label for="letter_grade" class="form-label">Letter Grade *</label>
+                            <select class="form-select" id="letter_grade" name="letter_grade" required>
+                                {% for grade_option in grade_options %}
+                                    <option value="{{ grade_option }}" 
+                                            {% if grade.letter_grade == grade_option %}selected{% endif %}>
+                                        {{ grade_option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Grade Points Preview -->
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Grade Points:</strong>
+                                        <span id="gradePoints">{{ "%.1f"|format(grade.points) }}</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Current Grade:</strong>
+                                        <span class="badge grade-badge grade-{{ grade.letter_grade.replace('+', 'plus').replace('-', 'minus') }}">
+                                            {{ grade.letter_grade }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('grades') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Grades
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Update Grade
+                            </button>
+                        </div>
+                    </form>
+                {% elif enrollments %}
+                    <!-- Create new grade -->
+                    <form method="POST" action="{{ url_for('create_grade') }}" novalidate>
+                        <!-- Enrollment Selection -->
+                        <div class="mb-3">
+                            <label for="enrollment" class="form-label">Student & Course *</label>
+                            <select class="form-select" id="enrollment" required>
+                                <option value="">Choose student and course...</option>
+                                {% for enrollment in enrollments %}
+                                    <option value="{{ enrollment.student_id }}-{{ enrollment.course_id }}"
+                                            data-student-id="{{ enrollment.student_id }}"
+                                            data-course-id="{{ enrollment.course_id }}"
+                                            {% if request.args.get('student_id')|int == enrollment.student_id and request.args.get('course_id')|int == enrollment.course_id %}selected{% endif %}>
+                                        {{ enrollment.student_name }} → {{ enrollment.course_code }} ({{ enrollment.course_name }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Select the student-course combination for grading.</div>
+                        </div>
+                        
+                        <!-- Hidden fields for student_id and course_id -->
+                        <input type="hidden" id="student_id" name="student_id" required>
+                        <input type="hidden" id="course_id" name="course_id" required>
+                        
+                        <!-- Grade Selection -->
+                        <div class="mb-3">
+                            <label for="letter_grade" class="form-label">Letter Grade *</label>
+                            <select class="form-select" id="letter_grade" name="letter_grade" required>
+                                <option value="">Select grade...</option>
+                                {% for grade_option in grade_options %}
+                                    <option value="{{ grade_option }}">{{ grade_option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Grade Preview -->
+                        <div id="gradePreview" class="card bg-light mb-3" style="display: none;">
+                            <div class="card-body">
+                                <h6 class="card-title">Grade Assignment Preview</h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong>Student:</strong>
+                                        <p id="previewStudent" class="mb-1"></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Course:</strong>
+                                        <p id="previewCourse" class="mb-1"></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>Grade Points:</strong>
+                                        <p id="previewPoints" class="mb-1"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-muted small mb-3">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Existing grades for the same student-course combination will be updated.
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('grades') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Grades
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                <i class="fas fa-star me-2"></i>Assign Grade
+                            </button>
+                        </div>
+                    </form>
+                {% else %}
+                    <!-- No Enrollments Available -->
+                    <div class="text-center py-4">
+                        <i class="fas fa-exclamation-triangle text-warning fs-1 mb-3"></i>
+                        <h5>No Enrollments Available</h5>
+                        <p class="text-muted">Students must be enrolled in courses before grades can be assigned.</p>
+                        
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ url_for('new_enrollment') }}" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Create Enrollment
+                            </a>
+                            <a href="{{ url_for('enrollments') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-list me-2"></i>View Enrollments
+                            </a>
+                        </div>
+                        
+                        <hr class="my-3">
+                        <a href="{{ url_for('grades') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Grades
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Grade points mapping
+const gradePoints = {
+    'A+': 4.0, 'A': 4.0, 'A-': 3.7,
+    'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+    'C+': 2.3, 'C': 2.0, 'C-': 1.7,
+    'D+': 1.3, 'D': 1.0, 'D-': 0.7,
+    'F': 0.0
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const enrollmentSelect = document.getElementById('enrollment');
+    const studentIdInput = document.getElementById('student_id');
+    const courseIdInput = document.getElementById('course_id');
+    const letterGradeSelect = document.getElementById('letter_grade');
+    const previewDiv = document.getElementById('gradePreview');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // For edit mode, update grade points when grade changes
+    if (letterGradeSelect && !enrollmentSelect) {
+        letterGradeSelect.addEventListener('change', function() {
+            const gradePointsSpan = document.getElementById('gradePoints');
+            if (gradePointsSpan) {
+                gradePointsSpan.textContent = gradePoints[this.value] || '0.0';
+            }
+        });
+    }
+    
+    // For create mode, handle enrollment selection and preview
+    if (enrollmentSelect) {
+        enrollmentSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (this.value) {
+                const studentId = selectedOption.getAttribute('data-student-id');
+                const courseId = selectedOption.getAttribute('data-course-id');
+                
+                studentIdInput.value = studentId;
+                courseIdInput.value = courseId;
+                
+                updatePreview();
+            } else {
+                studentIdInput.value = '';
+                courseIdInput.value = '';
+                previewDiv.style.display = 'none';
+                submitBtn.disabled = true;
+            }
+        });
+        
+        letterGradeSelect.addEventListener('change', updatePreview);
+        
+        function updatePreview() {
+            const enrollmentOption = enrollmentSelect.options[enrollmentSelect.selectedIndex];
+            const letterGrade = letterGradeSelect.value;
+            
+            if (enrollmentSelect.value && letterGrade) {
+                const text = enrollmentOption.text;
+                const [studentName, courseInfo] = text.split(' → ');
+                
+                document.getElementById('previewStudent').textContent = studentName;
+                document.getElementById('previewCourse').textContent = courseInfo;
+                document.getElementById('previewPoints').textContent = gradePoints[letterGrade] + ' points';
+                
+                previewDiv.style.display = 'block';
+                submitBtn.disabled = false;
+            } else {
+                previewDiv.style.display = 'none';
+                submitBtn.disabled = true;
+            }
+        }
+        
+        // Initial check for URL parameters
+        if (enrollmentSelect.value && letterGradeSelect.value) {
+            updatePreview();
+        }
+    }
+});
+</script>
+{% endblock %}

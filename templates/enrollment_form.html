@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}New Enrollment - Student Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-plus me-2"></i>New Enrollment
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if students and courses %}
+                    <form method="POST" action="{{ url_for('create_enrollment') }}" novalidate>
+                        <div class="row">
+                            <!-- Student Selection -->
+                            <div class="col-md-12 mb-3">
+                                <label for="student_id" class="form-label">Select Student *</label>
+                                <select class="form-select" id="student_id" name="student_id" required>
+                                    <option value="">Choose a student...</option>
+                                    {% for student in students %}
+                                        <option value="{{ student.id }}" 
+                                                {% if request.args.get('student_id')|int == student.id %}selected{% endif %}>
+                                            {{ student.name }} ({{ student.email }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a student.
+                                </div>
+                            </div>
+                            
+                            <!-- Course Selection -->
+                            <div class="col-md-12 mb-3">
+                                <label for="course_id" class="form-label">Select Course *</label>
+                                <select class="form-select" id="course_id" name="course_id" required>
+                                    <option value="">Choose a course...</option>
+                                    {% for course in courses %}
+                                        <option value="{{ course.id }}" 
+                                                {% if request.args.get('course_id')|int == course.id %}selected{% endif %}>
+                                            {{ course.code }} - {{ course.name }} ({{ course.credits }} credits)
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select a course.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preview Section -->
+                        <div id="enrollmentPreview" class="card bg-light mt-3" style="display: none;">
+                            <div class="card-body">
+                                <h6 class="card-title">Enrollment Preview</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Student:</strong>
+                                        <p id="previewStudent" class="mb-1"></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Course:</strong>
+                                        <p id="previewCourse" class="mb-1"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-muted small mb-3 mt-3">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Fields marked with * are required. Duplicate enrollments will be ignored.
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('enrollments') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Enrollments
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                <i class="fas fa-user-plus me-2"></i>Create Enrollment
+                            </button>
+                        </div>
+                    </form>
+                {% else %}
+                    <!-- No Students or Courses Available -->
+                    <div class="text-center py-4">
+                        <i class="fas fa-exclamation-triangle text-warning fs-1 mb-3"></i>
+                        <h5>Unable to Create Enrollment</h5>
+                        
+                        {% if not students and not courses %}
+                            <p class="text-muted">You need to add students and courses before creating enrollments.</p>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ url_for('new_student') }}" class="btn btn-primary">
+                                    <i class="fas fa-user-plus me-2"></i>Add Students
+                                </a>
+                                <a href="{{ url_for('new_course') }}" class="btn btn-success">
+                                    <i class="fas fa-book me-2"></i>Add Courses
+                                </a>
+                            </div>
+                        {% elif not students %}
+                            <p class="text-muted">You need to add students before creating enrollments.</p>
+                            <a href="{{ url_for('new_student') }}" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Add First Student
+                            </a>
+                        {% elif not courses %}
+                            <p class="text-muted">You need to add courses before creating enrollments.</p>
+                            <a href="{{ url_for('new_course') }}" class="btn btn-success">
+                                <i class="fas fa-book me-2"></i>Add First Course
+                            </a>
+                        {% endif %}
+                        
+                        <hr class="my-3">
+                        <a href="{{ url_for('enrollments') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Enrollments
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        {% if students and courses %}
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ students|length }}</h4>
+                            <small>Available Students</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ courses|length }}</h4>
+                            <small>Available Courses</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const studentSelect = document.getElementById('student_id');
+    const courseSelect = document.getElementById('course_id');
+    const previewDiv = document.getElementById('enrollmentPreview');
+    const previewStudent = document.getElementById('previewStudent');
+    const previewCourse = document.getElementById('previewCourse');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    function updatePreview() {
+        const studentOption = studentSelect.options[studentSelect.selectedIndex];
+        const courseOption = courseSelect.options[courseSelect.selectedIndex];
+        
+        if (studentSelect.value && courseSelect.value) {
+            previewStudent.textContent = studentOption.text;
+            previewCourse.textContent = courseOption.text;
+            previewDiv.style.display = 'block';
+            submitBtn.disabled = false;
+        } else {
+            previewDiv.style.display = 'none';
+            submitBtn.disabled = true;
+        }
+    }
+    
+    if (studentSelect && courseSelect) {
+        studentSelect.addEventListener('change', updatePreview);
+        courseSelect.addEventListener('change', updatePreview);
+        
+        // Initial check
+        updatePreview();
+    }
+});
+</script>
+{% endblock %}

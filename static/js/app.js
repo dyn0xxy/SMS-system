@@ -17,6 +17,9 @@ function initializeApp() {
     
     // Initialize responsive tables
     initializeResponsiveTables();
+    
+    // Initialize navbar active states
+    initializeNavbarActiveStates();
 }
 
 // Form Validation
@@ -294,6 +297,22 @@ function enhanceSelectElements() {
 
 // Initialize enhanced selects
 document.addEventListener('DOMContentLoaded', enhanceSelectElements);
+
+// Navbar Active States
+function initializeNavbarActiveStates() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-link-modern');
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        
+        // Get the href attribute and compare with current path
+        const href = link.getAttribute('href');
+        if (href && (currentPath === href || (href !== '/' && currentPath.startsWith(href)))) {
+            link.classList.add('active');
+        }
+    });
+}
 
 // Export utilities for use in other scripts
 window.SMS = {

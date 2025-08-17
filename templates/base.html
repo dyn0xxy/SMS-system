@@ -15,99 +15,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
 </head>
 <body>
-    <!-- Enhanced Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark modern-navbar">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand brand-enhanced" href="{{ url_for('index') }}">
-                <div class="brand-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="brand-text">
-                    <div class="brand-title">SMS</div>
-                    <div class="brand-subtitle">Student Management</div>
-                </div>
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Student Management System
             </a>
             
-            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto nav-enhanced">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link nav-link-modern" href="{{ url_for('index') }}">
-                            <div class="nav-icon">
-                                <i class="fas fa-home"></i>
-                            </div>
-                            <span class="nav-text">Dashboard</span>
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-modern" href="{{ url_for('students') }}">
-                            <div class="nav-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <span class="nav-text">Students</span>
+                        <a class="nav-link" href="{{ url_for('students') }}">
+                            <i class="fas fa-users me-1"></i>Students
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-modern" href="{{ url_for('courses') }}">
-                            <div class="nav-icon">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <span class="nav-text">Courses</span>
+                        <a class="nav-link" href="{{ url_for('courses') }}">
+                            <i class="fas fa-book me-1"></i>Courses
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-modern" href="{{ url_for('enrollments') }}">
-                            <div class="nav-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <span class="nav-text">Enrollments</span>
+                        <a class="nav-link" href="{{ url_for('enrollments') }}">
+                            <i class="fas fa-user-plus me-1"></i>Enrollments
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-modern" href="{{ url_for('grades') }}">
-                            <div class="nav-icon">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <span class="nav-text">Grades</span>
+                        <a class="nav-link" href="{{ url_for('grades') }}">
+                            <i class="fas fa-chart-line me-1"></i>Grades
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-modern" href="{{ url_for('reports') }}">
-                            <div class="nav-icon">
-                                <i class="fas fa-chart-bar"></i>
-                            </div>
-                            <span class="nav-text">Reports</span>
+                        <a class="nav-link" href="{{ url_for('reports') }}">
+                            <i class="fas fa-chart-bar me-1"></i>Reports
                         </a>
                     </li>
                 </ul>
-                
-                <!-- Quick Action Button -->
-                <div class="navbar-nav">
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle quick-action-btn" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-plus"></i>
-                            <span class="d-none d-md-inline ms-1">Quick Add</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end modern-dropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('new_student') }}">
-                                <i class="fas fa-user-plus me-2"></i>Add Student
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('new_course') }}">
-                                <i class="fas fa-book me-2"></i>Add Course
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('new_enrollment') }}">
-                                <i class="fas fa-user-graduate me-2"></i>New Enrollment
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('new_grade') }}">
-                                <i class="fas fa-star me-2"></i>Assign Grade
-                            </a></li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </div>
     </nav>

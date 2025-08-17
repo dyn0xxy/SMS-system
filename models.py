@@ -272,7 +272,7 @@ class Grade:
     }
     
     @staticmethod
-    def create(student_id: int, course_id: int, letter_grade: str, points: float = None) -> Dict:
+    def create(student_id: int, course_id: int, letter_grade: str, points: Optional[float] = None) -> Dict:
         """Create or update a grade"""
         # Check if grade already exists for this student-course combination
         for grade_id, grade in data_store.grades.items():

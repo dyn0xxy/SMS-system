@@ -1,5 +1,66 @@
 /* Custom CSS for Student Management System */
 
+/* Force dark theme styles to ensure visibility */
+html[data-bs-theme="dark"] body {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .card {
+    background-color: #2d2d2d !important;
+    border-color: #404040 !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .table {
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .navbar-dark {
+    background-color: #000000 !important;
+}
+
+html[data-bs-theme="dark"] .form-control,
+html[data-bs-theme="dark"] .form-select {
+    background-color: #3d3d3d !important;
+    border-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .form-control:focus,
+html[data-bs-theme="dark"] .form-select:focus {
+    background-color: #3d3d3d !important;
+    border-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .text-muted {
+    color: #aaaaaa !important;
+}
+
+html[data-bs-theme="dark"] .lead,
+html[data-bs-theme="dark"] h1,
+html[data-bs-theme="dark"] h2,
+html[data-bs-theme="dark"] h3,
+html[data-bs-theme="dark"] h4,
+html[data-bs-theme="dark"] h5,
+html[data-bs-theme="dark"] h6,
+html[data-bs-theme="dark"] p {
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .card-header {
+    background-color: #404040 !important;
+    border-bottom-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+html[data-bs-theme="dark"] .card-footer {
+    background-color: #404040 !important;
+    border-top-color: #555555 !important;
+    color: #ffffff !important;
+}
+
 /* Avatar circles for student names */
 .avatar-circle {
     width: 40px;

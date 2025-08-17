@@ -382,7 +382,10 @@ def create_grade():
         student = Student.get(student_id)
         course = Course.get(course_id)
         
-        flash(f'Grade {letter_grade} assigned to {student["name"]} for {course["code"]}!', 'success')
+        if student and course:
+            flash(f'Grade {letter_grade} assigned to {student["name"]} for {course["code"]}!', 'success')
+        else:
+            flash('Grade assigned successfully!', 'success')
         return redirect(url_for('grades'))
         
     except ValueError:
@@ -429,7 +432,10 @@ def update_grade(grade_id):
         student = Student.get(grade['student_id'])
         course = Course.get(grade['course_id'])
         
-        flash(f'Grade updated to {letter_grade} for {student["name"]} in {course["code"]}!', 'success')
+        if student and course:
+            flash(f'Grade updated to {letter_grade} for {student["name"]} in {course["code"]}!', 'success')
+        else:
+            flash('Grade updated successfully!', 'success')
         return redirect(url_for('grades'))
         
     except Exception as e:
